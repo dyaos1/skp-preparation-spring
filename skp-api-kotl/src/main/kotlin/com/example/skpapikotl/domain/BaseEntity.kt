@@ -9,6 +9,11 @@ abstract class BaseEntity(
 ) {
     val createdBy = createdBy
     val createdAt: LocalDateTime = LocalDateTime.now()
-    val updatedBy: String? = null
+    var updatedBy: String? = null
     var updatedAt: LocalDateTime? = null
+
+    fun update(updatedBy: String) {
+        this.updatedBy = updatedBy
+        this.updatedAt = LocalDateTime.now()
+    }
 }
