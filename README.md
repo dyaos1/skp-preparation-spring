@@ -20,3 +20,19 @@ body
 ```
 
 git kraken 이용 추천
+if not:
+```markup
+git checkout -b feature/#10-make-history
+
+// 작업 후
+git commit -m feat: [#10]done
+nothing to say
+git push feature/#10-make-history
+
+// git hub에서 pull request 마친 후
+git checkout develop
+git fetch -p
+git pull origin develop
+
+git checkout -b feature/#11-start-again
+```
