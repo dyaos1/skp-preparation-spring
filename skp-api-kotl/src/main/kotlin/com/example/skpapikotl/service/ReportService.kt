@@ -1,11 +1,16 @@
 package com.example.skpapikotl.service
 
+import com.example.skpapikotl.constant.ReportType
 import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.exception.ReportNotFoundException
 import com.example.skpapikotl.repository.ReportRepository
 import com.example.skpapikotl.service.dto.ReportCreateDto
+import com.example.skpapikotl.service.dto.ReportSearchDto
 import com.example.skpapikotl.service.dto.ReportUpdateDto
 import com.example.skpapikotl.service.dto.toEntity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,6 +37,22 @@ class ReportService(private val reportRepository: ReportRepository) {
         val targetReport: Report = reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
         reportRepository.delete(targetReport)
         return targetReport.id
+    }
+
+    fun getReport(reportId: Long): Report? {
+        return reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
+    }
+
+    @Transactional
+    fun findPageBy(pageRequest: Pageable, reportSearchDto: ReportSearchDto): Page<Report> {
+        val reportTypeValue = if (reportSearchDto.reportType != null) ReportType.valueOf(reportSearchDto.reportType!!) else null
+        val results:List<Report> = reportRepository.searchReport(
+            title = reportSearchDto.title,
+            createdBy = reportSearchDto.createdBy,
+            reportType = reportTypeValue
+        )
+        val resultLength = results.size
+        return PageImpl(results, pageRequest, resultLength.toLong())
     }
 }
 
