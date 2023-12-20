@@ -1,0 +1,33 @@
+### 보고서 생성
+POST /localhost:8080/api/report
+Content-Type: application/json
+
+{
+  "title": "보고서 제목",
+  "createdBy": "작성자",
+  "reportType": "A",
+  "description": "비고"
+}
+
+### 보고서 수정
+PUT /localhost:8080/api/report/1
+Content-Type: application/json
+
+{
+  "title": "보고서 수정 제목",
+  "updatedBy": "수정자",
+  "reportType": "B",
+  "description": "비고 편집"
+}
+
+### 보고서 삭제
+DELETE /localhost:8080/api/report/1?createdBy=spark
+Content-Type: application/json
+
+### 보고서 상세조회
+GET /localhost:8080/api/report/1
+Content-Type: application/json
+
+### 보고서 조회
+GET /localhost:8080/api/report
+Content-Type: application/json
