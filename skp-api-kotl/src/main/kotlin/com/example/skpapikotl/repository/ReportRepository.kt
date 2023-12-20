@@ -17,4 +17,3 @@ interface ReportRepository : JpaRepository<Report, Long> {
             "ORDER BY r.id DESC")
     fun searchReport(title: String?, createdBy: String?, reportType: ReportType?): List<Report>
 }
-

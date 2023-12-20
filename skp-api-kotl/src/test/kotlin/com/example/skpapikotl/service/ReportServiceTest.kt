@@ -133,6 +133,11 @@ class ReportServiceTest(
     }
     given("게시글 목록 조회") {
         When("모두 조회시") {
+            reportRepository.save(Report(
+                title="last title",
+                createdBy = "last creator",
+                reportType = ReportType.D,
+            ))
             val page = reportService.findPageBy(
                 PageRequest.of(0, 5),
                 ReportSearchDto(),
@@ -140,9 +145,9 @@ class ReportServiceTest(
             then("페이지 정상적으로 반환") {
                 page.number shouldBe 0
                 page.size shouldBe 5
-                page.content.size shouldBe 10
-                page.content[0].title shouldBe "title10"
-                page.content[0].createdBy shouldBe "creator2"
+                page.content.size shouldBe 14
+                page.content[0].title shouldBe "last title"
+                page.content[0].createdBy shouldBe "last creator"
                 page.content[0].reportType.toString() shouldBe "D"
                 page.content[0].description shouldBe null
             }
