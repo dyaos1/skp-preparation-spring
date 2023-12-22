@@ -6,9 +6,11 @@ data class ReportDetailResponse(
     val title: String,
     val createdBy: String,
     val reportType: String,
-    val description: String?,
+    val description: String? = null,
     val createdAt: String,
-    val updatedAt: String?,
+    val updatedAt: String? = null,
+    val pGoal: String? = null,
+    val sGoal: String? = null,
 )
 
 fun Report.toResponseDto() = ReportDetailResponse(
@@ -18,4 +20,6 @@ fun Report.toResponseDto() = ReportDetailResponse(
     description = description,
     createdAt = createdAt.toString(),
     updatedAt = updatedAt?.toString(),
+    pGoal = goal?.pGoal,
+    sGoal = goal?.sGoal,
 )

@@ -5,8 +5,10 @@ import com.example.skpapikotl.controller.dto.ReportDetailResponse
 import com.example.skpapikotl.controller.dto.ReportSummaryResponse
 import com.example.skpapikotl.controller.dto.toResponseDto
 import com.example.skpapikotl.controller.dto.toSummaryResponse
+import com.example.skpapikotl.domain.Goal
 import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.exception.ReportNotFoundException
+import com.example.skpapikotl.repository.GoalRepository
 import com.example.skpapikotl.repository.ReportRepository
 import com.example.skpapikotl.service.dto.*
 import org.springframework.data.domain.Page
@@ -18,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class ReportService(private val reportRepository: ReportRepository) {
+class ReportService(
+    private val reportRepository: ReportRepository,
+    private val goalRepository: GoalRepository,
+    ) {
     @Transactional
     fun create(
         reportCreateDto: ReportCreateDto

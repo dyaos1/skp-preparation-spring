@@ -22,13 +22,13 @@ class GoalService(
     @Transactional
     fun create(reportId: Long, goalCreateDto: GoalCreateDto): Long {
         val report: Report = reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
+        report.addGoal(goalCreateDto.toEntity(report))
         return goalRepository.save(goalCreateDto.toEntity(report)).id
     }
 
     @Transactional
     fun update(goalId: Long, goalUpdateDto: GoalUpdateDto): Long {
         val goal: Goal = goalRepository.findByIdOrNull(goalId) ?: throw GoalNotFoundException()
-        goal.update(goalUpdateDto)
         return goal.id
     }
 

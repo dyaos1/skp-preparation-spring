@@ -2,19 +2,21 @@ package com.example.skpapikotl.controller
 
 import com.example.skpapikotl.controller.dto.GoalPostRequest
 import com.example.skpapikotl.controller.dto.GoalPutRequest
+import com.example.skpapikotl.controller.dto.toDto
+import com.example.skpapikotl.service.GoalService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
-class GoalController {
+class GoalController(
+    private val goalService: GoalService
+) {
     @PostMapping("/report/{reportId}/goal")
     fun createGoal(
         @PathVariable reportId: Long,
         @RequestBody goalPostRequest: GoalPostRequest,
     ): Long {
-        println(goalPostRequest.sGoal)
-        println(goalPostRequest.pGoal)
-        return 1L
+        return goalService.create(reportId, goalPostRequest.toDto())
     }
 
     @PutMapping("/goal/{goalId}")
@@ -22,10 +24,7 @@ class GoalController {
         @PathVariable goalId: Long,
         @RequestBody goalPutRequest: GoalPutRequest,
     ): Long {
-        println(goalId)
-        println(goalPutRequest.sGoal)
-        println(goalPutRequest.pGoal)
-        return 1L
+        return goalService.update(goalId, goalPutRequest.toDto())
     }
 
     @DeleteMapping("/goal/{goalId}")
@@ -33,8 +32,8 @@ class GoalController {
         @PathVariable goalId: Long,
         @RequestParam createdBy: String,
     ) : Long {
-        println(goalId)
-        println(createdBy)
-        return 1L
+        return goalService.delete(goalId, createdBy)
     }
 }
+
+

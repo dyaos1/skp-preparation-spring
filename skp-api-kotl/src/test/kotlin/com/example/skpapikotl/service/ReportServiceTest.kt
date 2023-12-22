@@ -2,8 +2,10 @@ package com.example.skpapikotl.service
 
 import com.example.skpapikotl.constant.ReportType
 import com.example.skpapikotl.controller.dto.ReportDetailResponse
+import com.example.skpapikotl.domain.Goal
 import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.exception.ReportNotFoundException
+import com.example.skpapikotl.repository.GoalRepository
 import com.example.skpapikotl.repository.ReportRepository
 import com.example.skpapikotl.service.dto.ReportCreateDto
 import com.example.skpapikotl.service.dto.ReportSearchDto
@@ -12,6 +14,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
@@ -19,7 +22,8 @@ import org.springframework.data.repository.findByIdOrNull
 @SpringBootTest
 class ReportServiceTest(
     private val reportRepository: ReportRepository,
-    private val reportService: ReportService
+    private val reportService: ReportService,
+    private val goalRepository: GoalRepository,
 ) : BehaviorSpec({
     beforeSpec{
         reportRepository.saveAll(listOf(
@@ -95,11 +99,21 @@ class ReportServiceTest(
             reportType = ReportType.A,
             description = "description",
         ))
+        val goal: Goal = goalRepository.save(Goal(
+            sGoal = "전략목표",
+            pGoal = "성과목표",
+            createdBy = "spark",
+            report = saved,
+        ))
         When("정상적으로 삭제"){
             reportService.delete(saved.id, "createdBy")
             then("보고서가 잘 삭제된다"){
                 val found: Report? = reportRepository.findByIdOrNull(saved.id)
                 found shouldBe null
+            }
+            then("성과목표도 같이 삭제됨을 확인"){
+                val foundGoal: Goal? = goalRepository.findByIdOrNull(goal.id)
+                foundGoal shouldBe null
             }
         }
 
@@ -116,14 +130,24 @@ class ReportServiceTest(
             reportType = ReportType.A,
             description = "description",
         ))
+        val goal: Goal = goalRepository.save(Goal(
+            sGoal = "전략목표",
+            pGoal = "성과목표",
+            report = saved,
+            createdBy = "spark"
+        ))
         When("정상 조회시"){
             val found: ReportDetailResponse = reportService.getReport(saved.id)!!
             then("정상적으로 리턴 된다"){
                 found shouldNotBe null
                 found.title shouldBe "title"
                 found.createdBy shouldBe "createdBy"
-                found.reportType.toString() shouldBe "A"
+                found.reportType shouldBe "A"
                 found.description shouldBe "description"
+            }
+            then("성과목표도 정상조회 됨을 확인") {
+                found.sGoal shouldBe "전략목표"
+                found.pGoal shouldBe "성과목표"
             }
         }
         When("보고서 없을때"){
@@ -149,7 +173,7 @@ class ReportServiceTest(
                 page.content.size shouldBe 14
                 page.content[0].title shouldBe "last title"
                 page.content[0].createdBy shouldBe "last creator"
-                page.content[0].reportType.toString() shouldBe "D"
+                page.content[0].reportType shouldBe "D"
             }
         }
         When("작성자로 조회시") {
