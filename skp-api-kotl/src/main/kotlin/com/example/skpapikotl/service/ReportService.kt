@@ -37,7 +37,7 @@ class ReportService(private val reportRepository: ReportRepository) {
     fun delete(reportId: Long, deleter: String): Long {
         val targetReport: Report = reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
         reportRepository.delete(targetReport)
-        return targetReport.id
+        return reportId
     }
 
     fun getReport(reportId: Long): ReportDetailResponse {

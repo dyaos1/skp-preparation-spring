@@ -2,10 +2,7 @@ package com.example.skpapikotl.domain
 
 import com.example.skpapikotl.constant.ReportType
 import com.example.skpapikotl.service.dto.ReportUpdateDto
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 class Report(
@@ -24,10 +21,13 @@ class Report(
 
     var description = description
 
+    @OneToOne
+    var goal: Goal? = null
+
     fun update(updater: ReportUpdateDto) {
         this.title = updater.title
         this.reportType = ReportType.valueOf(updater.reportType)
         this.description = updater.description
-        super.update(updater.updatedBy)
+        super.updateMeta(updater.updatedBy)
     }
 }

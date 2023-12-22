@@ -18,8 +18,8 @@ import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
 class ReportServiceTest(
-    reportRepository: ReportRepository,
-    reportService: ReportService
+    private val reportRepository: ReportRepository,
+    private val reportService: ReportService
 ) : BehaviorSpec({
     beforeSpec{
         reportRepository.saveAll(listOf(
