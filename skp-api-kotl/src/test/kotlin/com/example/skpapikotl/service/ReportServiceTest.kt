@@ -1,6 +1,7 @@
 package com.example.skpapikotl.service
 
 import com.example.skpapikotl.constant.ReportType
+import com.example.skpapikotl.controller.dto.ReportDetailResponse
 import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.exception.ReportNotFoundException
 import com.example.skpapikotl.repository.ReportRepository
@@ -116,7 +117,7 @@ class ReportServiceTest(
             description = "description",
         ))
         When("정상 조회시"){
-            val found: Report = reportService.getReport(saved.id)!!
+            val found: ReportDetailResponse = reportService.getReport(saved.id)!!
             then("정상적으로 리턴 된다"){
                 found shouldNotBe null
                 found.title shouldBe "title"
@@ -149,7 +150,6 @@ class ReportServiceTest(
                 page.content[0].title shouldBe "last title"
                 page.content[0].createdBy shouldBe "last creator"
                 page.content[0].reportType.toString() shouldBe "D"
-                page.content[0].description shouldBe null
             }
         }
         When("작성자로 조회시") {
@@ -164,7 +164,6 @@ class ReportServiceTest(
                 page.content[0].title shouldBe "title5"
                 page.content[0].createdBy shouldBe "creator1"
                 page.content[0].reportType.toString() shouldBe "B"
-                page.content[0].description shouldBe null
             }
         }
         When("보고서 타입으로 조회시") {
@@ -179,7 +178,6 @@ class ReportServiceTest(
                 page.content[0].title shouldBe "title7"
                 page.content[0].createdBy shouldBe "creator2"
                 page.content[0].reportType.toString() shouldBe "C"
-                page.content[0].description shouldBe null
             }
         }
     }
