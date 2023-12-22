@@ -1,7 +1,9 @@
 package com.example.skpapikotl.controller
 
-import com.example.skpapikotl.controller.dto.ReportPostRequest
-import com.example.skpapikotl.controller.dto.ReportPutRequest
+import com.example.skpapikotl.controller.dto.*
+import com.example.skpapikotl.service.ReportService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,16 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api")
-class ReportController {
+class ReportController(
+    private val reportService: ReportService
+) {
     @PostMapping("/report")
     fun createReport(
         @RequestBody reportPostRequest: ReportPostRequest
     ): Long {
-        println(reportPostRequest.title)
-        println(reportPostRequest.reportType)
-        println(reportPostRequest.createdBy)
-        println(reportPostRequest.description)
-        return 1L
+        return reportService.create(reportPostRequest.toDto())
     }
 
     @PutMapping("/report/{id}")
@@ -31,12 +31,7 @@ class ReportController {
         @PathVariable id: Long,
         @RequestBody reportPutRequest: ReportPutRequest
     ): Long {
-        println("id: $id")
-        println(reportPutRequest.title)
-        println(reportPutRequest.reportType)
-        println(reportPutRequest.updatedBy)
-        println(reportPutRequest.description)
-        return 1L
+        return reportService.update(id, reportPutRequest.toDto())
     }
 
     @DeleteMapping("/report/{id}")
@@ -44,22 +39,21 @@ class ReportController {
         @PathVariable id: Long,
         @RequestParam createdBy: String,
     ): Long {
-        println(id)
-        println(createdBy)
-        return 1L
+        return reportService.delete(id, createdBy)
     }
 
     @GetMapping("/report/{id}")
     fun getReport(
         @PathVariable id: Long
-    ): Long {
-        println(id)
-        return 1L
+    ): ReportDetailResponse {
+        return reportService.getReport(id)
     }
 
     @GetMapping("/report")
     fun getReports(
-    ): Long {
-        return 1L
+        pageable: Pageable,
+        reportSearchRequest: ReportSearchRequest
+    ): Page<ReportSummaryResponse> {
+        return reportService.findPageBy(pageable, reportSearchRequest.toDto())
     }
 }
