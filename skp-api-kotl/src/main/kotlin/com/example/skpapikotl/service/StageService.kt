@@ -23,15 +23,15 @@ class StageService(
         return stageRepository.save(stageCreateDto.toEntity(report)).id
     }
 
-    fun update(stageId: Long, stageUpdateDto: StageUpdateDto): Long? {
+    fun update(stageId: Long, stageUpdateDto: StageUpdateDto): Long {
         val targetStage = stageRepository.findByIdOrNull(stageId) ?: throw StageNotFoundException()
         targetStage.update(stageUpdateDto)
-        return 1L
+        return targetStage.id
     }
 
-    fun delete(stageId: Long, createdBy: String): Long? {
+    fun delete(stageId: Long, createdBy: String): Long {
         val targetStage: Stage = stageRepository.findByIdOrNull(stageId) ?: throw StageNotFoundException()
         stageRepository.delete(targetStage)
-        return stageId
+        return targetStage.id
     }
 }

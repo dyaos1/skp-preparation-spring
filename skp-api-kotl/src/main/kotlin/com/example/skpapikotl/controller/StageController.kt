@@ -2,6 +2,9 @@ package com.example.skpapikotl.controller
 
 import com.example.skpapikotl.controller.dto.StagePostRequest
 import com.example.skpapikotl.controller.dto.StagePutRequest
+import com.example.skpapikotl.controller.dto.toDto
+import com.example.skpapikotl.repository.StageRepository
+import com.example.skpapikotl.service.StageService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,17 +16,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api")
-class StageController {
+class StageController(
+    private val stageService: StageService,
+) {
     @PostMapping("/report/{reportId}/stage")
     fun createStage(
         @PathVariable reportId: Long,
         @RequestBody stagePostRequest: StagePostRequest,
     ): Long {
-        println(stagePostRequest.stage)
-        println(stagePostRequest.startAt)
-        println(stagePostRequest.endAt)
-        println(stagePostRequest.content)
-        return 1L
+        return stageService.create(reportId, stagePostRequest.toDto())
     }
 
     @PutMapping("/stage/{stageId}")
@@ -31,11 +32,7 @@ class StageController {
         @PathVariable stageId: Long,
         @RequestBody stagePutRequest: StagePutRequest,
     ): Long {
-        println(stagePutRequest.stage)
-        println(stagePutRequest.startAt)
-        println(stagePutRequest.endAt)
-        println(stagePutRequest.content)
-        return 1L
+        return stageService.update(stageId, stagePutRequest.toDto())
     }
 
     @DeleteMapping("/stage/{stageId}")
@@ -43,8 +40,6 @@ class StageController {
         @PathVariable stageId: Long,
         @RequestParam createdBy: String,
     ) : Long {
-        println(stageId)
-        println(createdBy)
-        return 1L
+        return stageService.delete(stageId, createdBy)
     }
 }

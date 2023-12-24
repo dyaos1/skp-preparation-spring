@@ -4,6 +4,7 @@ import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.domain.Stage
 
 data class StageCreateDto(
+    val stage: Long?,
     val startAt: String,
     val endAt: String,
     val createdBy: String,
@@ -11,10 +12,10 @@ data class StageCreateDto(
 )
 
 fun StageCreateDto.toEntity(report: Report) = Stage(
-    stage = (report.stages.size + 1).toLong(),
+    stage = stage ?: (report.stages.size + 1).toLong(),
     startAt = startAt,
     endAt = endAt,
     createdBy = createdBy,
     content = content,
-    report = report
+    report = report,
 )
