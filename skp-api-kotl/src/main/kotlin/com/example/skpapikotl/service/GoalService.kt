@@ -22,7 +22,6 @@ class GoalService(
     @Transactional
     fun create(reportId: Long, goalCreateDto: GoalCreateDto): Long {
         val report: Report = reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
-        report.addGoal(goalCreateDto.toEntity(report))
         return goalRepository.save(goalCreateDto.toEntity(report)).id
     }
 

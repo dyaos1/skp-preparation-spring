@@ -43,6 +43,12 @@ class GoalServiceTest(
                 goal?.sGoal shouldBe "전략목표"
                 goal?.pGoal shouldBe "성과목표"
             }
+            then("보고서 엔티티에서도 확인가능") {
+                report.goal shouldBe null
+                val rereport = reportRepository.findByIdOrNull(report.id)
+                rereport?.goal!!.sGoal shouldBe "전략목표"
+                rereport?.goal!!.pGoal shouldBe "성과목표"
+            }
         }
         When("보고서가 없으면") {
             then("없다고 오류 발생") {

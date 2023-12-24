@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
+import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 
 
@@ -35,6 +36,9 @@ class Report(
     var goal: Goal? = null
         protected set
 
+    @OneToMany(mappedBy = "report", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var stages: List<Stage> = emptyList()
+
     fun update(updater: ReportUpdateDto) {
         this.title = updater.title
         this.reportType = ReportType.valueOf(updater.reportType)
@@ -42,7 +46,4 @@ class Report(
         super.updateMeta(updater.updatedBy)
     }
 
-    fun addGoal(goal: Goal) {
-        this.goal = goal
-    }
 }
