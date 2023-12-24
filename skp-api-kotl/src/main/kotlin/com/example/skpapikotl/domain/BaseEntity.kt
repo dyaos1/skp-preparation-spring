@@ -12,7 +12,7 @@ abstract class BaseEntity(
     var updatedBy: String? = null
     var updatedAt: LocalDateTime? = null
 
-    fun update(updatedBy: String) {
+    fun updateMeta(updatedBy: String) {
         this.updatedBy = updatedBy
         this.updatedAt = LocalDateTime.now()
     }

@@ -1,0 +1,26 @@
+### 단계별 성과목표 생성
+POST /localhost:8080/api/report/1/stage
+Content-Type: application/json
+
+{
+  "stage": 1,
+  "startAt": "2013",
+  "endAt": "2015",
+  "createdBy": "spark",
+  "content": "유망 중소중견기업의 원자력산업 진입 유도를 통한 산업생태계 조성 및 사업화 성과 10% 향상"
+}
+
+### 단계별 성과목표 수정
+PUT /localhost:8080/api/stage/1
+Content-Type: application/json
+
+{
+  "stage": 2,
+  "startAt": "2016",
+  "endAt": "2018",
+  "updatedBy": "spark",
+  "content": "원자력산업 글로벌 강소기업 육성 및 사업화 성과 15% 향상"
+}
+
+### 단계별 성과목표 삭제
+DELETE /localhost:8080/api/stage/1?createdBy=spark

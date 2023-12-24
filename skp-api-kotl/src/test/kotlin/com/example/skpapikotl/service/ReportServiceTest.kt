@@ -2,24 +2,30 @@ package com.example.skpapikotl.service
 
 import com.example.skpapikotl.constant.ReportType
 import com.example.skpapikotl.controller.dto.ReportDetailResponse
+import com.example.skpapikotl.domain.Goal
 import com.example.skpapikotl.domain.Report
 import com.example.skpapikotl.exception.ReportNotFoundException
+import com.example.skpapikotl.repository.GoalRepository
 import com.example.skpapikotl.repository.ReportRepository
 import com.example.skpapikotl.service.dto.ReportCreateDto
 import com.example.skpapikotl.service.dto.ReportSearchDto
 import com.example.skpapikotl.service.dto.ReportUpdateDto
+import com.example.skpapikotl.service.dto.StageCreateDto
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
 class ReportServiceTest(
-    reportRepository: ReportRepository,
-    reportService: ReportService
+    private val reportRepository: ReportRepository,
+    private val reportService: ReportService,
+    private val goalRepository: GoalRepository,
+    private val stageService: StageService,
 ) : BehaviorSpec({
     beforeSpec{
         reportRepository.saveAll(listOf(
@@ -82,7 +88,6 @@ class ReportServiceTest(
         }
 
         When("해당하는 보고서가 없을때") {
-
             then("수정할 보고서를 찾을 수 없다고 나옴") {
                 shouldThrow<ReportNotFoundException> { reportService.update(999L, update) }
             }
@@ -95,14 +100,23 @@ class ReportServiceTest(
             reportType = ReportType.A,
             description = "description",
         ))
+        val goal: Goal = goalRepository.save(Goal(
+            sGoal = "전략목표",
+            pGoal = "성과목표",
+            createdBy = "spark",
+            report = saved,
+        ))
         When("정상적으로 삭제"){
             reportService.delete(saved.id, "createdBy")
             then("보고서가 잘 삭제된다"){
                 val found: Report? = reportRepository.findByIdOrNull(saved.id)
                 found shouldBe null
             }
+            then("성과목표도 같이 삭제됨을 확인"){
+                val foundGoal: Goal? = goalRepository.findByIdOrNull(goal.id)
+                foundGoal shouldBe null
+            }
         }
-
         When("보고서가 없을 경우"){
             then("보고서를 찾을 수 없다는 에러 발생"){
                 shouldThrow<ReportNotFoundException> { reportService.delete(999L, "createdBy") }
@@ -116,14 +130,37 @@ class ReportServiceTest(
             reportType = ReportType.A,
             description = "description",
         ))
+        val goal: Goal = goalRepository.save(Goal(
+            sGoal = "전략목표",
+            pGoal = "성과목표",
+            report = saved,
+            createdBy = "spark"
+        ))
+        for(i: Int in 1..3)
+            stageService.create(saved.id, StageCreateDto(
+                startAt = (2015+i).toString(),
+                endAt = (2016+i).toString(),
+                createdBy = "spark",
+                content = "content" + i.toString(),
+            ))
         When("정상 조회시"){
             val found: ReportDetailResponse = reportService.getReport(saved.id)!!
             then("정상적으로 리턴 된다"){
                 found shouldNotBe null
                 found.title shouldBe "title"
                 found.createdBy shouldBe "createdBy"
-                found.reportType.toString() shouldBe "A"
+                found.reportType shouldBe "A"
                 found.description shouldBe "description"
+            }
+            then("성과목표도 정상조회 됨을 확인") {
+                found.sGoal shouldBe "전략목표"
+                found.pGoal shouldBe "성과목표"
+            }
+            then("단계별 성과목표도 정상 조회 됨을 확인"){
+                found.stages.size shouldBe 3
+                found.stages[0].stage shouldBe "1단계"
+                found.stages[1].stage shouldBe "2단계"
+                found.stages[2].stage shouldBe "3단계"
             }
         }
         When("보고서 없을때"){
@@ -149,7 +186,7 @@ class ReportServiceTest(
                 page.content.size shouldBe 14
                 page.content[0].title shouldBe "last title"
                 page.content[0].createdBy shouldBe "last creator"
-                page.content[0].reportType.toString() shouldBe "D"
+                page.content[0].reportType shouldBe "D"
             }
         }
         When("작성자로 조회시") {
