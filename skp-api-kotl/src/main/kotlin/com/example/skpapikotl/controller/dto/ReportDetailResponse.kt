@@ -1,6 +1,7 @@
 package com.example.skpapikotl.controller.dto
 
 import com.example.skpapikotl.domain.Report
+import com.example.skpapikotl.domain.Stage
 
 data class ReportDetailResponse(
     val title: String,
@@ -11,6 +12,7 @@ data class ReportDetailResponse(
     val updatedAt: String? = null,
     val pGoal: String? = null,
     val sGoal: String? = null,
+    val stages: List<StageDetailResponse> = emptyList()
 )
 
 fun Report.toResponseDto() = ReportDetailResponse(
@@ -22,4 +24,5 @@ fun Report.toResponseDto() = ReportDetailResponse(
     updatedAt = updatedAt?.toString(),
     pGoal = goal?.pGoal,
     sGoal = goal?.sGoal,
+    stages = stages.map { it.toResponse() },
 )

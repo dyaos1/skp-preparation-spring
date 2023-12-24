@@ -37,7 +37,7 @@ class Report(
         protected set
 
     @OneToMany(mappedBy = "report", orphanRemoval = true, cascade = [CascadeType.ALL])
-    var stages: List<Stage> = emptyList()
+    var stages: MutableList<Stage> = mutableListOf()
 
     fun update(updater: ReportUpdateDto) {
         this.title = updater.title
