@@ -1,13 +1,62 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Main() {
+
+    const [ resultJson, setResult ] = useState("")
+
+    useEffect(() => {
+        // const setButton = document.getElementById('myButton')
+        // const textInput = document.getElementById('myText')
+        // setButton.addEventListener('click', () => {
+        //     const textValue = textInput.value
+        //     window.electronAPI.setTextValue(textValue)
+        // })
+
+        const resultArea = document.getElementById('json-here')
+        const retrieveButton = document.getElementById('get-report')
+        retrieveButton.addEventListener('click', () => {
+            fetch("http://localhost:8080/generator?reportId=1&generatedBy=me",
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json"},
+                }
+            ).then((response) => {
+                return response.json()
+            })
+            .then((res) => {
+                setResult(JSON.stringify(res))
+            }).then(() => {
+                console.log(resultJson)
+                resultArea.innerHTML = resultJson
+            })
+        })
+    })
+
     return (
         <div>
             <h1>Hello from React!</h1>
-            <input type="text" id="myText" />       // 텍스트 입력 받아서,
-            <input type="submit" id="myButton" />   // submit 버튼을 누르면 파일 생성
+            {/* <div>
+                <label for="report-id">보고서번호</label>
+                <input type="text" id="report-id"/>
+            </div>
             <div>
-                <button id="go">go</button>         // go 버튼 누르면 exe 파일 실행
+                <label for="generated-by">작성자</label>
+                <input type="text" id="generated-by"/>
+            </div> */}
+            <div>
+                <input type="submit" id="get-report" value="retrieve" />
+            </div>
+
+            <div>
+                <input type="text" id="myText" /> 
+                <input type="submit" id="myButton" />
+            </div>
+            <div>
+                <button id="go">go</button> 
+            </div>
+            
+            <div>
+                <p id="json-here"></p>
             </div>
         </div>
     )
