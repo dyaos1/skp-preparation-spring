@@ -3,14 +3,16 @@ import React, { useEffect, useState } from 'react'
 export default function Main() {
 
     const [ resultJson, setResult ] = useState("")
+    const [ resultJson2, setResult2 ] = useState({})
 
     useEffect(() => {
-        // const setButton = document.getElementById('myButton')
+        const setButton = document.getElementById('myButton')
         // const textInput = document.getElementById('myText')
-        // setButton.addEventListener('click', () => {
-        //     const textValue = textInput.value
-        //     window.electronAPI.setTextValue(textValue)
-        // })
+        setButton.addEventListener('click', () => {
+            // const textValue = resultArea.value
+            const jsonValue = resultJson2
+            window.electronAPI.setTextValue(jsonValue)
+        })
 
         const resultArea = document.getElementById('json-here')
         const retrieveButton = document.getElementById('get-report')
@@ -25,6 +27,7 @@ export default function Main() {
             })
             .then((res) => {
                 setResult(JSON.stringify(res))
+                setResult2(res)
             }).then(() => {
                 console.log(resultJson)
                 resultArea.innerHTML = resultJson
@@ -35,14 +38,14 @@ export default function Main() {
     return (
         <div>
             <h1>Hello from React!</h1>
-            {/* <div>
+            <div>
                 <label for="report-id">보고서번호</label>
                 <input type="text" id="report-id"/>
             </div>
             <div>
                 <label for="generated-by">작성자</label>
-                <input type="text" id="generated-by"/>
-            </div> */}
+                <input type="text" id="generated-by" />
+            </div>
             <div>
                 <input type="submit" id="get-report" value="retrieve" />
             </div>

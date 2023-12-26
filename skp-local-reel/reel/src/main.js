@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -18,7 +19,8 @@ const createWindow = () => {
 
   // ipc here
   ipcMain.on('set-text', (event, textValue) => {
-    fs.writeFileSync("./test.js", textValue)
+    const jsonValue = JSON.stringify(textValue)
+    fs.writeFileSync("test.json", jsonValue)
   })
 
   // and load the index.html of the app.

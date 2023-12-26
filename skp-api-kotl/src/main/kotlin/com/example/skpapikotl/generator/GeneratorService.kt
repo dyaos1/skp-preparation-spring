@@ -25,8 +25,11 @@ class GeneratorService(private val reportRepository: ReportRepository) {
     var generatedAt: String = LocalDateTime.now().toString()
 
     fun init(reportId: Long, generatedBy: String) {
+        this.fieldList = mutableListOf()
+        this.tableList = mutableListOf()
         this.report = reportRepository.findByIdOrNull(reportId) ?: throw ReportNotFoundException()
         this.generatedBy = generatedBy
+        this.generatedAt = LocalDateTime.now().toString()
     }
 
     fun getResult(): GeneratorResponse {
