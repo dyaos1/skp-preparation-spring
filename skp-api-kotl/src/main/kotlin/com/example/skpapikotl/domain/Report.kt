@@ -46,4 +46,8 @@ class Report(
         super.updateMeta(updater.updatedBy)
     }
 
+    fun deleteGoal(){
+        this.goal = null
+    }
+
 }

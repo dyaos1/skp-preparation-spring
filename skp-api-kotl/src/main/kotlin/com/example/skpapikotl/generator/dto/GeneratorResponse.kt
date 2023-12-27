@@ -11,4 +11,3 @@ data class GeneratorResponse(
     val generatedAt: String,
     val generatedBy: String,
 )
-

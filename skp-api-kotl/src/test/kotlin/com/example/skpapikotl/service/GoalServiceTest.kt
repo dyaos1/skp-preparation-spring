@@ -113,7 +113,7 @@ class GoalServiceTest(
             val deletedGoalId = goalService.delete(goal.id, "spark")
             then("삭제 됨을 확인") {
                 deletedGoalId shouldBe goal.id
-                val deletedGoal: Goal? = goalRepository.findByIdOrNull(deletedGoalId)
+                val deletedGoal: Goal? = goalRepository.findByIdOrNull(goal.id)
                 deletedGoal shouldBe null
             }
         }

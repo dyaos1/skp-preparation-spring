@@ -29,6 +29,7 @@ class StageServiceTest(
         ))
         When("인풋이 멀쩡하면") {
             val stageId = stageService.create(report.id, StageCreateDto(
+                stage = null,
                 startAt= "2015",
                 endAt= "2016",
                 createdBy= "spark",
@@ -44,6 +45,7 @@ class StageServiceTest(
                 stage?.content shouldBe "내용"
             }
             val stageId2 = stageService.create(report.id, StageCreateDto(
+                stage = null,
                 startAt= "2016",
                 endAt= "2018",
                 createdBy= "spark",
@@ -62,6 +64,7 @@ class StageServiceTest(
             reportType = ReportType.A
         ))
         val stageId = stageService.create(report.id, StageCreateDto(
+            stage = null,
             startAt = "2015",
             endAt = "2016",
             createdBy = "spark",
@@ -103,6 +106,7 @@ class StageServiceTest(
             reportType = ReportType.A
         ))
         val stageId = stageService.create(report.id, StageCreateDto(
+            stage = null,
             startAt = "2015",
             endAt = "2016",
             createdBy = "spark",

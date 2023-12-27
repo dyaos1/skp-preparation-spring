@@ -28,15 +28,15 @@ class GoalService(
     @Transactional
     fun update(goalId: Long, goalUpdateDto: GoalUpdateDto): Long {
         val goal: Goal = goalRepository.findByIdOrNull(goalId) ?: throw GoalNotFoundException()
+        goal.update(goalUpdateDto)
         return goal.id
     }
 
     @Transactional
-    fun delete(goalId: Long, s: String): Long {
+    fun delete(goalId: Long, createdBy: String): Long {
         val goal: Goal = goalRepository.findByIdOrNull(goalId) ?: throw GoalNotFoundException()
-        goalRepository.delete(goal)
+        goal.report.deleteGoal()
+        // goalRepository.delete(goal)
         return goalId
     }
 }
-
-

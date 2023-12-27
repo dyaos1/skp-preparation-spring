@@ -138,10 +138,11 @@ class ReportServiceTest(
         ))
         for(i: Int in 1..3)
             stageService.create(saved.id, StageCreateDto(
+                stage = null,
                 startAt = (2015+i).toString(),
                 endAt = (2016+i).toString(),
                 createdBy = "spark",
-                content = "content" + i.toString(),
+                content = "content" + i.toString()
             ))
         When("정상 조회시"){
             val found: ReportDetailResponse = reportService.getReport(saved.id)!!
@@ -183,7 +184,7 @@ class ReportServiceTest(
             then("페이지 정상적으로 반환") {
                 page.number shouldBe 0
                 page.size shouldBe 5
-                page.content.size shouldBe 14
+                page.content.size shouldBe 5
                 page.content[0].title shouldBe "last title"
                 page.content[0].createdBy shouldBe "last creator"
                 page.content[0].reportType shouldBe "D"

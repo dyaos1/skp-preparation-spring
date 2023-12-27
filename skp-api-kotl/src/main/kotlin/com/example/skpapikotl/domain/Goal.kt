@@ -28,4 +28,10 @@ class Goal(
     @OneToOne(fetch = FetchType.LAZY)
     var report: Report = report
         protected set
+
+    fun update(updator: GoalUpdateDto) {
+        this.sGoal = updator.sGoal
+        this.pGoal = updator.pGoal
+        super.updateMeta(updator.updatedBy)
+    }
 }
